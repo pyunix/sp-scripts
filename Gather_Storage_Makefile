@@ -1,0 +1,25 @@
+#SHELL = powershell.exe
+GCP-Storage-Files = ${DateStamp}Storage-GCP.json ${DateStamp}Snaps-GCP.json ${DateStamp}BootDisk-GCP.csv ${DateStamp}LastSnap-GCP.csv
+
+all: $(GCP-Storage-Files)
+	
+clean: GCP-Storage-Clean
+
+GCP-Storage: $(GCP-Storage-Files)
+	
+GCP-Storage-Clean:
+	-@${MakeCMD} ${MakeCMDOpts} rm.ps1 $(GCP-Storage-Files)
+
+${DateStamp}BootDisk-GCP.csv: ${DateStamp}Storage-GCP.json
+	@python ${BinDir}/SPInv/Inventory_BootDisk_GCP_csv.py
+
+${DateStamp}LastSnap-GCP.csv: ${DateStamp}Storage-GCP.json
+	@python ${BinDir}/SPInv/Inventory_LastSnap_GCP_csv.py
+
+${DateStamp}Storage-GCP.json:
+	@python ${BinDir}/SPInv/Inventory_Storage_GCP_json.py
+#	-@${MakeCMD} ${MakeCMDOpts} touch.ps1 ${DateStamp}Storage-GCP.json
+	
+${DateStamp}Snaps-GCP.json:
+	@python ${BinDir}/SPInv/Inventory_Snaps_GCP_json.py
+#	-@${MakeCMD} ${MakeCMDOpts} touch.ps1 ${DateStamp}Snaps-GCP.json

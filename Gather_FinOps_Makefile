@@ -1,0 +1,25 @@
+#SHELL = powershell.exe
+GCP-FinOps-Files = ${DateStamp}CPU-GCP.json ${DateStamp}Memory-GCP.json ${DateStamp}CPU-GCP.csv ${DateStamp}Memory-GCP.csv
+
+all: $(GCP-FinOps-Files)
+	
+clean: GCP-FinOps-Clean
+
+GCP-FinOps: $(GCP-FinOps-Files)
+	
+GCP-FinOps-Clean:
+	-@${MakeCMD} ${MakeCMDOpts} rm.ps1 $(GCP-FinOps-Files)
+
+${DateStamp}CPU-GCP.csv: ${DateStamp}CPU-GCP.json
+	@python ${BinDir}/SPInv/Inventory_FinOpsCPU_GCP_csv.py
+
+${DateStamp}Memory-GCP.csv: ${DateStamp}Memory-GCP.json
+	@python ${BinDir}/SPInv/Inventory_FinOpsMemory_GCP_csv.py
+
+${DateStamp}CPU-GCP.json:
+	@python ${BinDir}/SPInv/Inventory_FinOpsCPU_GCP_json.py
+	-@${MakeCMD} ${MakeCMDOpts} touch.ps1 ${DateStamp}Storage-GCP.json
+	
+${DateStamp}Memory-GCP.json:
+	@python ${BinDir}/SPInv/Inventory_FinOpsMemory_GCP_json.py
+	-@${MakeCMD} ${MakeCMDOpts} touch.ps1 ${DateStamp}Snaps-GCP.json

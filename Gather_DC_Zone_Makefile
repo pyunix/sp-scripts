@@ -1,0 +1,28 @@
+GCP-DC-Zone-Files = ${DateStamp}DC-Zone-GCP.json #${DateStamp}DC-Zone-GCP.csv
+AZ-DC-Zone-Files = ${DateStamp}DC-Zone-AZ.json ${DateStamp}DC-Zone-AZ.csv
+
+all: $(GCP-DC-Zone-Files) $(AZ-DC-Zone-Files)
+
+clean: GCP-DC-Zone-Clean AZ-DC-Zone-Clean
+
+GCP-DC-Zone: $(GCP-DC-Zone-Files)
+AZ-DC-Zone: $(AZ-DC-Zone-Files)
+
+GCP-DC-Zone-Clean:
+	-@${MakeCMD} ${MakeCMDOpts} rm.ps1 $(GCP-DC-Zone-Files)
+
+AZ-DC-Zone-Clean:
+	-@${MakeCMD} ${MakeCMDOpts} rm.ps1 $(AZ-DC-Zone-Files)
+
+${DateStamp}DC-Zone-GCP.json:
+	@python ${BinDir}/SPInv/Inventory_DC_Zone_GCP_json.py
+
+${DateStamp}DC-Zone-AZ.json:
+	@python ${BinDir}/SPInv/Inventory_DC_Zone_AZ_json.py
+	
+${DateStamp}DC-Zone-GCP.csv: ${DateStamp}DC-Zone-AZ.json
+	#@python ${BinDir}/Inventory_DC_Zone_GCP_csv.py
+	echo TBC
+
+${DateStamp}DC-Zone-AZ.csv: ${DateStamp}DC-Zone-AZ.json
+	@python ${BinDir}/SPInv/Inventory_DC_Zone_AZ_csv.py

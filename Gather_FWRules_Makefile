@@ -1,0 +1,18 @@
+#SHELL = powershell.exe
+GCP-FWRules-Files = ${DateStamp}FWRules-GCP.json ${DateStamp}FWRules-GCP.csv
+
+all: $(GCP-FWRules-Files)
+	
+clean: GCP-FWRules-Clean
+
+GCP-FWRules: $(GCP-FWRules-Files)
+	
+GCP-FWRules-Clean:
+	-@${MakeCMD} ${MakeCMDOpts} rm.ps1 $(GCP-FWRules-Files)
+	$(MAKE) -C Zone GCP-FWRules-Subnets-Clean
+
+${DateStamp}FWRules-GCP.csv: ${DateStamp}FWRules-GCP.json
+	@python ${BinDir}/SPInv/Inventory_FWRules_GCP_csv.py
+
+${DateStamp}FWRules-GCP.json:
+	@python ${BinDir}/SPInv/Inventory_FWRules_GCP_json.py

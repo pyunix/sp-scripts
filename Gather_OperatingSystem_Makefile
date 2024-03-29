@@ -1,0 +1,18 @@
+#SHELL = powershell.exe
+GCP-OperatingSystem-Files = ${DateStamp}OperatingSystem-GCP.json ${DateStamp}OperatingSystem-GCP.csv
+
+all: $(GCP-OperatingSystem-Files)
+	
+clean: GCP-OperatingSystem-Clean
+
+GCP-OperatingSystem: $(GCP-OperatingSystem-Files)
+	
+GCP-OperatingSystem-Clean:
+	-@${MakeCMD} ${MakeCMDOpts} rm.ps1 $(GCP-OperatingSystem-Files)
+
+${DateStamp}OperatingSystem-GCP.csv: ${DateStamp}OperatingSystem-GCP.json
+	@python ${BinDir}/SPInv/Inventory_OperatingSystem_GCP_csv.py
+
+${DateStamp}OperatingSystem-GCP.json:
+	@python ${BinDir}/SPInv/Inventory_OperatingSystem_GCP_json.py
+	-@${MakeCMD} ${MakeCMDOpts} touch.ps1 ${DateStamp}OperatingSystem-GCP.json

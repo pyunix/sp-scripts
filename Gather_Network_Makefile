@@ -1,0 +1,18 @@
+#SHELL = powershell.exe
+GCP-Network-Files = ${DateStamp}Network-GCP.json ${DateStamp}Network-GCP.csv
+
+all: $(GCP-Network-Files)
+	
+clean: GCP-Network-Clean
+
+GCP-Network: $(GCP-Network-Files)
+	
+GCP-Network-Clean:
+	-@${MakeCMD} ${MakeCMDOpts} rm.ps1 $(GCP-Network-Files)
+	$(MAKE) -C Zone GCP-Network-Subnets-Clean
+
+${DateStamp}Network-GCP.csv: ${DateStamp}Network-GCP.json
+	@python ${BinDir}/SPInv/Inventory_Network_GCP_csv.py
+
+${DateStamp}Network-GCP.json:
+	@python ${BinDir}/SPInv/Inventory_Network_GCP_json.py

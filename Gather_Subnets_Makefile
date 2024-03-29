@@ -1,0 +1,18 @@
+#SHELL = powershell.exe
+GCP-Subnets-Files = ${DateStamp}Subnets-GCP.json ${DateStamp}Subnets-GCP.csv
+
+all: $(GCP-Subnets-Files)
+	
+clean: GCP-Subnets-Clean
+
+GCP-Subnets: $(GCP-Subnets-Files)
+	
+GCP-Subnets-Clean:
+	-@${MakeCMD} ${MakeCMDOpts} rm.ps1 $(GCP-Subnets-Files)
+	$(MAKE) -C Zone GCP-Subnets-Subnets-Clean
+
+${DateStamp}Subnets-GCP.csv: ${DateStamp}Subnets-GCP.json
+	@python ${BinDir}/SPInv/Inventory_Subnets_GCP_csv.py
+
+${DateStamp}Subnets-GCP.json:
+	@python ${BinDir}/SPInv/Inventory_Subnets_GCP_json.py
