@@ -1,0 +1,71 @@
+#!/bin/sh
+
+# set up some colors
+#SPNORM="00" 
+# Foregrounds BLACK="30" RED="91" GREEN="92" YELLOW="93" BLUE="34" Magenta="95" CYAN="36" WHITE="37" 
+# Backgrounds BLACK="40" RED="41" GREEN="42" YELLOW="43" BLUE="44" Magenta="45" CYAN="46" WHITE="47"
+SPNORM="00"
+SPBG="44"
+SPFG="37"
+
+
+#Pass this back to .sp
+export SPCOLOR="\033[${SPNORM};${SPBG};${SPFG}m"
+export LS_COLORS="rs=${SPBG}:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=01;05;37;41:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32"
+
+# Character Attributes (SGR)
+#printf "\033[0m Normal\n" # → Normal (default)
+#printf "\033[1m abc\n" # → Bold
+#printf "\033[4m abc\n" # → Underlined
+#printf "\033[5m abc\n" # → Blink (appears as Bold)
+#printf "\033[7m abc\n" # → Inverse
+#printf "\033[8m abc\n" # → Invisible, i.e., hidden (VT300)
+#
+#printf "\033[0m Normal\n" # → Normal (default)
+#printf "\033[22m abcd\n" #→ Normal (neither bold nor faint)
+#printf "\033[24m abcd\n" #→ Not underlined
+#printf "\033[25m abcd\n" #→ Steady (not blinking)
+#printf "\033[27m abcd\n" #→ Positive (not inverse)
+#printf "\033[28m abcd\n" #→ Visible, i.e., not hidden (VT300)
+#
+#printf "\033[0m Normal\n" # → Normal (default)
+#printf "\033[30m abcd\n" #→ Set SPFG to Black
+#printf "\033[31m abcd\n" #→ Set SPFG to Red
+#printf "\033[32m abcd\n" #→ Set SPFG to Green
+#printf "\033[33m abcd\n" #→ Set SPFG to Yellow
+#printf "\033[34m abcd\n" #→ Set SPFG to Blue
+#printf "\033[35m abcd\n" #→ Set SPFG to Magenta
+#printf "\033[36m abcd\n" #→ Set SPFG to Cyan
+#printf "\033[37m abcd\n" #→ Set SPFG to White
+#printf "\033[39m abcd\n" #→ Set SPFG to default (original)
+#
+#printf "\033[0m Normal\n" # → Normal (default)
+#printf "\033[40m abcd\n" #→ Set SPBG to Black
+#printf "\033[41m abcd\n" #→ Set SPBG to Red
+#printf "\033[42m abcd\n" #→ Set SPBG to Green
+#printf "\033[43m abcd\n" #→ Set SPBG to Yellow
+#printf "\033[44m abcd\n" #→ Set SPBG to Blue
+#printf "\033[45m abcd\n" #→ Set SPBG to Magenta
+#printf "\033[46m abcd\n" #→ Set SPBG to Cyan
+#printf "\033[47m abcd\n" #→ Set SPBG to White
+#printf "\033[49m abcd\n" #→ Set SPBG to default (original).
+#
+#printf "\033[0m Normal\n" # → Normal (default)
+#printf "\033[90m abcd\n" #→ Set SPFG to Black
+#printf "\033[91m abcd\n" #→ Set SPFG to Red
+#printf "\033[92m abcd\n" #→ Set SPFG to Green
+#printf "\033[93m abcd\n" #→ Set SPFG to Yellow
+#printf "\033[94m abcd\n" #→ Set SPFG to Blue
+#printf "\033[95m abcd\n" #→ Set SPFG to Magenta
+#printf "\033[96m abcd\n" #→ Set SPFG to Cyan
+#printf "\033[97m abcd\n" #→ Set SPFG to White
+#
+#printf "\033[0m Normal\n" # → Normal (default)
+#printf "\033[100m abcd\n" #→ Set SPBG to Black
+#printf "\033[101m abcd\n" #→ Set SPBG to Red
+#printf "\033[102m abcd\n" #→ Set SPBG to Green
+#printf "\033[103m abcd\n" #→ Set SPBG to Yellow
+#printf "\033[104m abcd\n" #→ Set SPBG to Blue
+#printf "\033[105m abcd\n" #→ Set SPBG to Magenta
+#printf "\033[106m abcd\n" #→ Set SPBG to Cyan
+#printf "\033[107m abcd\n" #→ Set SPBG to White

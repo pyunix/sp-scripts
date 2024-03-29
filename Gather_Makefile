@@ -1,0 +1,31 @@
+#	$(MAKE) -C DC 
+all: GCP AZ
+	
+clean: GCP-Clean AZ-Clean
+
+GCP:
+	$(MAKE) -C DC GCP-DC
+	$(MAKE) -C Network GCP-Network
+	$(MAKE) -C FWRules GCP-FWRules
+	$(MAKE) -C Subnets GCP-Subnets
+	$(MAKE) -C Compute GCP-Compute
+	$(MAKE) -C OperatingSystem GCP-OperatingSystem
+	$(MAKE) -C Storage GCP-Storage
+	$(MAKE) -C FinOps GCP-FinOps
+
+GCP-Clean:
+	$(MAKE) -C DC GCP-DC-Clean
+	$(MAKE) -C Network GCP-Network-Clean
+	$(MAKE) -C FWRules GCP-FWRules-Clean
+	$(MAKE) -C Subnets GCP-Subnets-Clean
+	$(MAKE) -C Compute GCP-Compute-Clean
+	$(MAKE) -C OperatingSystem GCP-OperatingSystem-Clean
+	$(MAKE) -C Storage GCP-Storage-Clean
+	$(MAKE) -C FinOps GCP-FinOps-Clean
+
+AZ:
+	$(MAKE) -C DC AZ-DC
+	$(MAKE) -C Compute AZ-Compute
+	
+AZ-Clean:
+	$(MAKE) -C DC AZ-DC-Clean

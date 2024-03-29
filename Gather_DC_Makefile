@@ -1,0 +1,35 @@
+#SHELL = powershell.exe
+GCP-DC-Files = ${DateStamp}DC-GCP.json ${DateStamp}DC-GCP.csv
+
+AZ-DC-Files = ${DateStamp}DC-AZ.json ${DateStamp}DC-AZ.csv
+
+all: $(AZ-DC-Files)
+	$(MAKE) -C Zone 
+	
+clean: GCP-DC-Clean AZ-DC-Clean
+
+GCP-DC: $(GCP-DC-Files)
+	$(MAKE) -C Zone GCP-DC-Zone
+	
+AZ-DC: $(AZ-DC-Files)
+	$(MAKE) -C Zone AZ-DC-Zone
+	
+GCP-DC-Clean:
+	-@${MakeCMD} ${MakeCMDOpts} rm.ps1 $(GCP-DC-Files)
+	$(MAKE) -C Zone GCP-DC-Zone-Clean
+
+AZ-DC-Clean:
+	-@${MakeCMD} ${MakeCMDOpts} rm.ps1 $(AZ-DC-Files)
+	$(MAKE) -C Zone AZ-DC-Zone-Clean
+
+${DateStamp}DC-GCP.csv: ${DateStamp}DC-GCP.json
+	@python ${BinDir}/SPInv/Inventory_DC_GCP_csv.py
+
+${DateStamp}DC-AZ.csv: ${DateStamp}DC-AZ.json
+	@python ${BinDir}/SPInv/Inventory_DC_AZ_csv.py
+	
+${DateStamp}DC-GCP.json:
+	@python ${BinDir}/SPInv/Inventory_DC_GCP_json.py
+
+${DateStamp}DC-AZ.json:
+	@python ${BinDir}/SPInv/Inventory_DC_AZ_json.py

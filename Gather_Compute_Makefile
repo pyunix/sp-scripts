@@ -1,0 +1,54 @@
+#SHELL = powershell.exe
+GCP-Compute-Files = ${DateStamp}Compute-GCP.json ${DateStamp}Compute-GCP.csv
+Tenable-Compute-Files = ${DateStamp}Compute-Tenable.json ${DateStamp}Compute-Tenable.csv
+AZ-Compute-Files = ${DateStamp}Compute-AZ.csv
+Inv-Compute-Files = ${DateStamp}Compute-InvDB.json ${DateStamp}Compute-InvDB.csv
+
+all: $(GCP-Compute-Files) $(Tenable-Compute-Files) $(AZ-Compute-Files) $(Inv-Compute-Files)
+	
+clean: GCP-Compute-Clean Tenable-Compute-Clean AZ-Compute-Clean
+
+GCP-Compute: $(GCP-Compute-Files)
+Tenable-Compute: $(Tenable-Compute-Files)
+AZ-Compute: $(AZ-Compute-Files)
+
+# Clean
+GCP-Compute-Clean:
+	-@${MakeCMD} ${MakeCMDOpts} rm.ps1 $(GCP-Compute-Files)
+	$(MAKE) -C Zone GCP-Compute-Subnets-Clean
+	
+Tenable-Compute-Clean:
+	-@${MakeCMD} ${MakeCMDOpts} rm.ps1 $(Tenable-Compute-Files)
+
+AZ-Compute-Clean:
+	-@${MakeCMD} ${MakeCMDOpts} rm.ps1 $(AZ-Compute-Files)
+
+Inv-Compute-Clean:
+	-@${MakeCMD} ${MakeCMDOpts} rm.ps1 $(AZ-Compute-Files)
+
+# Generate CSV files
+${DateStamp}Compute-GCP.csv: ${DateStamp}Compute-GCP.json
+	@python ${BinDir}/SPInv/Inventory_Compute_GCP_csv.py
+	
+${DateStamp}Compute-Tenable.csv: ${DateStamp}Compute-Tenable.json
+	@python ${BinDir}/SPInv/Inventory_Compute_Tenable_csv.py
+
+${DateStamp}Compute-AZ.csv: ${DateStamp}Compute-AZ.json
+	@python ${BinDir}/SPInv/Inventory_Compute_AZ_csv.py
+
+${DateStamp}Compute-Inv.csv: ${DateStamp}Compute-Inv.json
+	@python ${BinDir}/SPInv/Inventory_Compute_Inv_csv.py
+	
+# Generate JSON Files
+${DateStamp}Compute-GCP.json:
+	@python ${BinDir}/SPInv/Inventory_Compute_GCP_json.py
+	
+${DateStamp}Compute-Tenable.json:
+	@python ${BinDir}/SPInv/Inventory_Compute_Tenable_json.py
+	
+${DateStamp}Compute-AZ.json:
+	@python ${BinDir}/SPInv/Inventory_Compute_AZ_json.py
+
+${DateStamp}Compute-Inv.json:
+	@python ${BinDir}/Get-OpsDB.py
+	

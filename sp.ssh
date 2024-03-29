@@ -1,0 +1,84 @@
+#!/bin/bash
+#---------------------------------------------------------------------------------------------------
+# Script: sp.ssh
+# Written By: Warren Dempsey
+# Company: OSS Group
+# Date: 15th Feb 2024
+# Description: Script to check Ansible host_vars and make an SSH connection like Ansible does
+#---------------------------------------------------------------------------------------------------
+
+#---------------------------------------------------------------------------------------------------
+# Helper function to make things pretty
+message() {
+    case $1 in
+        "Red") printf '\e[91m' ;;
+        "Green") printf '\e[92m' ;;
+        "Orange") printf '\e[93m' ;;
+        "Blue") printf '\e[94m' ;;
+        "Magenta") printf '\e[95m' ;;
+        "Cyan") printf '\e[96m' ;;
+        "White") printf '\e[97m' ;;
+        *) printf '\e[39m' ;;
+    esac
+    printf "%s: %s: %s\n" "$0" "$2" "$3"
+    printf '\e[39m'
+}
+
+sp_exit() {
+    message Red ERROR "$2"
+    exit "$1"
+}
+
+
+#---------------------------------------------------------------------------------------------------
+# Set up some base variables
+VARSDIR=~/ansible/inventory/host_vars
+DEFAUSER="a-warrend"
+DEFCGUSER="cgwardem"
+
+#---------------------------------------------------------------------------------------------------
+cd "$VARSDIR" || (echo "Can't find $VARSDIR" ; exit 1)
+
+VARSFILE=$( ls -1 $1.*yml)
+SPHOST=$(printf "$VARSFILE" |sed 's/\.yml$//')
+
+if [ "${VARSFILE:-None}" = "None" ]
+then
+    sp_exit 1 "Cant find host_vars file for $1"
+fi
+
+message Blue Debug "Found host_vars file $VARSFILE"
+
+ANSIBLEUSER=$(grep "^ansible_user:" $VARSFILE |awk '{for (i=2;i<=NF;i++) printf $i" ";print ""}')
+ANSIBLESSHARGS=$(grep "^ansible_ssh_common_args:" $VARSFILE |awk '{for (i=2;i<=NF;i++) printf $i" ";print ""}' |sed 's/ *$//')
+
+#message Blue Debug "Found ANSIBLEUSER $ANSIBLEUSER"
+#message Blue Debug "Found ANSIBLESSHARGS $ANSIBLESSHARGS"
+
+#cat $VARSFILE
+
+case "$ANSIBLEUSER" in
+    *domains.corp_cranegroup.linux.known_credentials.common.user*) SPUSER="$DEFCGUSER" ;;
+    *domains.corp_cranegroup.linux.user*) SPUSER="$DEFCGUSER" ;;
+    *domains.placemakers_fb_net_nz.linux.user*) SPUSER="$DEFAUSER" ;;
+    *domains.fbu_com.linux.user*) SPUSER="$DEFAUSER" ;;
+    *domains.sap_fbu_com.linux.user*) SPUSER="$DEFAUSER" ;;
+    *) SPUSER="$ANSIBLEUSER"
+esac
+
+SPSSHARGS=$(printf "$ANSIBLESSHARGS" | tr -d '"' |tr -d "'")
+
+message Blue Debug "Using SPUSER $SPUSER"
+message Blue Debug "Using SPSSHARGS #${SPSSHARGS}#"
+message Blue Debug "Using SPHOST $SPHOST"
+
+shift
+
+if [ "${SPSSHARGS:-None}" = "None" ]
+then
+    message Green Info "Running1: ssh -t ${SPUSER}@${SPHOST} $*"
+    ssh -t "${SPUSER}@${SPHOST}" $*
+else
+    message Green Info "Running2: ssh -t $SPSSHARGS ${SPUSER}@${SPHOST} $*"
+    ssh -t "$SPSSHARGS" "${SPUSER}@${SPHOST}" $*
+fi
